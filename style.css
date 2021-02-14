@@ -17,12 +17,6 @@
   cursor: pointer;
 }
 
-#selected-imgs img{
-  width: 150px;
-  height: 150px;
-  margin: 5px;
-}
-
 .added {
   border: 2px solid #1e1743;
   border-radius: 5px;
