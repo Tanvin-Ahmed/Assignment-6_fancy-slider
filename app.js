@@ -23,18 +23,34 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
   })
-
+  toggleSpinner();
 }
 
 const getImages = (query) => {
+  toggleSpinner();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
+    .then(data => {
+      if ((data.hits).length > 0) {
+        showImages(data.hits);
+      } else {
+        errorHandle();
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      errorHandle();
+    })
 }
-
+// error handle
+const errorHandle = () => {
+  document.getElementById('nameException').classList.remove('d-none');
+  imagesArea.style.display = 'none';
+  toggleSpinner();
+}
+// select item for slider
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
@@ -48,6 +64,7 @@ const selectItem = (event, img) => {
     sliders.pop(img);
   }
 }
+// create slider
 var timer
 const createSlider = (duration) => {
   // check slider image length
@@ -117,15 +134,15 @@ searchBtn.addEventListener('click', function () {
   sliders.length = 0;
 })
 
-// exception handle when time is smaller than 1s
+// exception handle when time is smaller than 1 millisecond
 const exceptionInTime = () => {
   sliderBtn.addEventListener('click', () => {
     let duration = document.getElementById('duration').value || 1000;
     console.log('duration', duration);
-    if (duration < 500) {
+    if (duration < 1) {
       document.getElementById('warning').classList.remove('d-none');
     }
-    else if (duration >= 500) {
+    else if (duration >= 1) {
       createSlider(duration);
     }
     else {
@@ -141,9 +158,15 @@ const pressEnterKey = (button, input) => {
   let inputValue = document.getElementById(input);
 
   inputValue.addEventListener("keypress", function (event) {
-    console.log('working')
     if (event.key == 'Enter')
-    search.click();
+      search.click();
   });
 }
 pressEnterKey('search-btn', 'search');
+
+// toggle spinner
+const toggleSpinner = () => {
+  const spinner = document.getElementById('loading-spinner');
+  spinner.classList.toggle('d-none');
+  imagesArea.classList.toggle('d-none');
+}
