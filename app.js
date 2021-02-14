@@ -63,7 +63,7 @@ const selectItem = (event, img) => {
     sliders.push(img);
   }
   else {
-    sliders.pop(img);
+    sliders.pop();
   }
 }
 // create slider
