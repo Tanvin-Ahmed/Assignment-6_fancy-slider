@@ -62,8 +62,8 @@ const selectItem = (event, img) => {
   if (item === -1) {
     sliders.push(img);
   }
-  if (item === 0) {
-    sliders.pop();
+  else {
+    sliders.pop(img);
   }
 }
 // create slider
