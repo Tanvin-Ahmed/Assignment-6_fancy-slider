@@ -31,9 +31,11 @@ const showImages = (images) => {
 const getImages = (query) => {
   document.getElementById('nameException').classList.add('d-none');
   toggleSpinner();
+
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => {
+      console.log(data.hits);
       if ((data.hits).length > 0) {
         showImages(data.hits);
       } else {
@@ -56,13 +58,11 @@ let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
   element.classList.toggle('added');
-
-  let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   }
-  else {
-    sliders.pop(img);
+  if (item === 0) {
+    sliders.pop();
   }
 }
 // create slider
@@ -131,7 +131,7 @@ searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
   const search = document.getElementById('search');
-  getImages(search.value);
+  if(search.value != '') getImages(search.value);
   sliders.length = 0;
 })
 
